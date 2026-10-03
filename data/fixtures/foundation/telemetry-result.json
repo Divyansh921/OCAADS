@@ -1,0 +1,22 @@
+{
+  "request_id": "fixture:telemetry-request",
+  "satellite_id": "fixture:target",
+  "status": "not_computed",
+  "provenance": {
+    "kind": "fixture",
+    "source": "foundation:telemetry-reference-only"
+  },
+  "notice": "Fixture only: first sample referenced; no anomaly detection or scoring ran.",
+  "anomalies": [
+    {
+      "id": "fixture:anomaly:c7205c37-63a6-5f3e-b31d-679cb5c985c1",
+      "satellite_id": "fixture:target",
+      "timestamp": "2030-01-01T12:00:00Z",
+      "score": null,
+      "signals": [
+        "fixture_signal"
+      ],
+      "status": "not_evaluated"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "request_id": "fixture:telemetry-request",
+  "satellite_id": "fixture:target",
+  "provenance": {
+    "kind": "fixture",
+    "source": "foundation-v1: hand-authored missing-value sample; not spacecraft telemetry"
+  },
+  "signals": [
+    { "name": "fixture_signal", "unit": "unspecified-fixture-unit" }
+  ],
+  "samples": [
+    {
+      "timestamp": "2030-01-01T12:00:00Z",
+      "values": { "fixture_signal": null }
+    }
+  ]
+}

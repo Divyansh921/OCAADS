@@ -1,0 +1,1 @@
+const fs=require('fs'); const workspacePath = require('./workspace-path'); const b=fs.readFileSync(workspacePath('OCAADS_CodeSwift_Submission.pdf')); const s=b.toString('latin1'); console.log({bytes:b.length,pages:(s.match(/\/Type \/Page(?!s)/g)||[]).length,valid:s.startsWith('%PDF-')&&s.includes('%%EOF')});

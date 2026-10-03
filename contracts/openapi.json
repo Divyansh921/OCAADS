@@ -1,0 +1,1010 @@
+{
+  "components": {
+    "schemas": {
+      "Anomaly": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Id",
+            "type": "string"
+          },
+          "satellite_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Satellite Id",
+            "type": "string"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "signals": {
+            "items": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Signals",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "not_evaluated",
+              "anomaly",
+              "normal"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "satellite_id",
+          "timestamp",
+          "score",
+          "signals",
+          "status"
+        ],
+        "title": "Anomaly",
+        "type": "object"
+      },
+      "Conjunction": {
+        "additionalProperties": false,
+        "properties": {
+          "comparison_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Comparison Id",
+            "type": "string"
+          },
+          "id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Id",
+            "type": "string"
+          },
+          "miss_distance_km": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Miss Distance Km"
+          },
+          "target_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Target Id",
+            "type": "string"
+          },
+          "tca": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tca"
+          }
+        },
+        "required": [
+          "id",
+          "target_id",
+          "comparison_id",
+          "tca",
+          "miss_distance_km"
+        ],
+        "title": "Conjunction",
+        "type": "object"
+      },
+      "Diagnosis": {
+        "additionalProperties": false,
+        "properties": {
+          "anomaly_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Anomaly Id",
+            "type": "string"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "explanation": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Explanation",
+            "type": "string"
+          },
+          "id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Id",
+            "type": "string"
+          },
+          "possible_cause": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Possible Cause"
+          },
+          "related_conjunction_ids": {
+            "items": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+              "type": "string"
+            },
+            "title": "Related Conjunction Ids",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "not_assessed",
+              "insufficient_evidence",
+              "hypothesis"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "anomaly_id",
+          "related_conjunction_ids",
+          "status",
+          "possible_cause",
+          "evidence",
+          "explanation"
+        ],
+        "title": "Diagnosis",
+        "type": "object"
+      },
+      "DiagnosisRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "orbital_result": {
+            "$ref": "#/components/schemas/OrbitalResult"
+          },
+          "request_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "satellite_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Satellite Id",
+            "type": "string"
+          },
+          "telemetry_result": {
+            "$ref": "#/components/schemas/TelemetryResult"
+          }
+        },
+        "required": [
+          "request_id",
+          "satellite_id",
+          "orbital_result",
+          "telemetry_result"
+        ],
+        "title": "DiagnosisRequest",
+        "type": "object"
+      },
+      "DiagnosisResult": {
+        "additionalProperties": false,
+        "properties": {
+          "diagnoses": {
+            "items": {
+              "$ref": "#/components/schemas/Diagnosis"
+            },
+            "title": "Diagnoses",
+            "type": "array"
+          },
+          "notice": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Notice",
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/ResultProvenance"
+          },
+          "request_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "satellite_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Satellite Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not_computed",
+              "completed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "satellite_id",
+          "status",
+          "provenance",
+          "notice",
+          "diagnoses"
+        ],
+        "title": "DiagnosisResult",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "enum": [
+              "invalid_request",
+              "not_implemented"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "issues"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Description",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "input_reference",
+              "rule"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "reference_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Reference Id",
+            "type": "string"
+          },
+          "reference_type": {
+            "enum": [
+              "anomaly",
+              "conjunction"
+            ],
+            "title": "Reference Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "reference_type",
+          "reference_id",
+          "description"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "engine_mode": {
+            "const": "fixture_only",
+            "default": "fixture_only",
+            "title": "Engine Mode",
+            "type": "string"
+          },
+          "service": {
+            "const": "OCAADS",
+            "default": "OCAADS",
+            "title": "Service",
+            "type": "string"
+          },
+          "stage": {
+            "const": "foundation",
+            "default": "foundation",
+            "title": "Stage",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "InputProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "fixture",
+              "supplied"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "source": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "source"
+        ],
+        "title": "InputProvenance",
+        "type": "object"
+      },
+      "OmmElements": {
+        "additionalProperties": false,
+        "description": "Uninterpreted flat OMM fields; required orbital fields remain Person 1's work.",
+        "properties": {
+          "fields": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "minProperties": 1,
+            "title": "Fields",
+            "type": "object"
+          },
+          "format": {
+            "const": "omm",
+            "title": "Format",
+            "type": "string"
+          }
+        },
+        "required": [
+          "format",
+          "fields"
+        ],
+        "title": "OmmElements",
+        "type": "object"
+      },
+      "OrbitalObject": {
+        "additionalProperties": false,
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "elements": {
+            "anyOf": [
+              {
+                "discriminator": {
+                  "mapping": {
+                    "omm": "#/components/schemas/OmmElements",
+                    "tle": "#/components/schemas/TleElements"
+                  },
+                  "propertyName": "format"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/TleElements"
+                  },
+                  {
+                    "$ref": "#/components/schemas/OmmElements"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elements"
+          },
+          "epoch": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Epoch"
+          },
+          "object_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id",
+          "epoch",
+          "elements"
+        ],
+        "title": "OrbitalObject",
+        "type": "object"
+      },
+      "OrbitalRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "comparisons": {
+            "items": {
+              "$ref": "#/components/schemas/OrbitalObject"
+            },
+            "title": "Comparisons",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/InputProvenance"
+          },
+          "request_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/OrbitalObject"
+          },
+          "window": {
+            "$ref": "#/components/schemas/TimeWindow"
+          }
+        },
+        "required": [
+          "request_id",
+          "provenance",
+          "target",
+          "comparisons",
+          "window"
+        ],
+        "title": "OrbitalRequest",
+        "type": "object"
+      },
+      "OrbitalResult": {
+        "additionalProperties": false,
+        "properties": {
+          "conjunctions": {
+            "items": {
+              "$ref": "#/components/schemas/Conjunction"
+            },
+            "title": "Conjunctions",
+            "type": "array"
+          },
+          "notice": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Notice",
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/ResultProvenance"
+          },
+          "request_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "satellite_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Satellite Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not_computed",
+              "completed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "satellite_id",
+          "status",
+          "provenance",
+          "notice",
+          "conjunctions"
+        ],
+        "title": "OrbitalResult",
+        "type": "object"
+      },
+      "ResultProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "fixture",
+              "calculated",
+              "model_generated",
+              "rule_generated"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "source": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "source"
+        ],
+        "title": "ResultProvenance",
+        "type": "object"
+      },
+      "Signal": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Name",
+            "type": "string"
+          },
+          "unit": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "unit"
+        ],
+        "title": "Signal",
+        "type": "object"
+      },
+      "TelemetryRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "provenance": {
+            "$ref": "#/components/schemas/InputProvenance"
+          },
+          "request_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "samples": {
+            "items": {
+              "$ref": "#/components/schemas/TelemetrySample"
+            },
+            "title": "Samples",
+            "type": "array"
+          },
+          "satellite_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Satellite Id",
+            "type": "string"
+          },
+          "signals": {
+            "items": {
+              "$ref": "#/components/schemas/Signal"
+            },
+            "minItems": 1,
+            "title": "Signals",
+            "type": "array"
+          }
+        },
+        "required": [
+          "request_id",
+          "satellite_id",
+          "provenance",
+          "signals",
+          "samples"
+        ],
+        "title": "TelemetryRequest",
+        "type": "object"
+      },
+      "TelemetryResult": {
+        "additionalProperties": false,
+        "properties": {
+          "anomalies": {
+            "items": {
+              "$ref": "#/components/schemas/Anomaly"
+            },
+            "title": "Anomalies",
+            "type": "array"
+          },
+          "notice": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Notice",
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/ResultProvenance"
+          },
+          "request_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "satellite_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "title": "Satellite Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not_computed",
+              "completed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "satellite_id",
+          "status",
+          "provenance",
+          "notice",
+          "anomalies"
+        ],
+        "title": "TelemetryResult",
+        "type": "object"
+      },
+      "TelemetrySample": {
+        "additionalProperties": false,
+        "properties": {
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "values": {
+            "minProperties": 1,
+            "patternProperties": {
+              "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "title": "Values",
+            "type": "object"
+          }
+        },
+        "required": [
+          "timestamp",
+          "values"
+        ],
+        "title": "TelemetrySample",
+        "type": "object"
+      },
+      "TimeWindow": {
+        "additionalProperties": false,
+        "properties": {
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "TimeWindow",
+        "type": "object"
+      },
+      "TleElements": {
+        "additionalProperties": false,
+        "description": "Raw lines only; validation does NOT establish a valid TLE or checksum.",
+        "properties": {
+          "format": {
+            "const": "tle",
+            "title": "Format",
+            "type": "string"
+          },
+          "line1": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Line1",
+            "type": "string"
+          },
+          "line2": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Line2",
+            "type": "string"
+          }
+        },
+        "required": [
+          "format",
+          "line1",
+          "line2"
+        ],
+        "title": "TleElements",
+        "type": "object"
+      },
+      "ValidationIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "location": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "location",
+          "message"
+        ],
+        "title": "ValidationIssue",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Team development foundation. All engine adapters are references-only fixtures. No orbital calculations, ML, correlation, or diagnosis are implemented.",
+    "title": "OCAADS Foundation API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/diagnosis/assess": {
+      "post": {
+        "operationId": "assessDiagnosis",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiagnosisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosisResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request or inconsistent references."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Real engines are not implemented."
+          }
+        },
+        "summary": "Connect fixture evidence (no diagnosis)",
+        "tags": [
+          "diagnosis"
+        ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/orbital/screen": {
+      "post": {
+        "operationId": "screenOrbital",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrbitalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrbitalResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request or inconsistent references."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Real engines are not implemented."
+          }
+        },
+        "summary": "Connect an orbital fixture (no calculation)",
+        "tags": [
+          "orbital"
+        ]
+      }
+    },
+    "/api/telemetry/analyze": {
+      "post": {
+        "operationId": "analyzeTelemetry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelemetryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request or inconsistent references."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Real engines are not implemented."
+          }
+        },
+        "summary": "Connect a telemetry fixture (no ML)",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "request_id": "fixture:diagnosis-request",
+  "satellite_id": "fixture:target",
+  "status": "not_computed",
+  "provenance": {
+    "kind": "fixture",
+    "source": "foundation:diagnosis-reference-only"
+  },
+  "notice": "Fixture only: inputs received together; no scientific relationship inferred.",
+  "diagnoses": [
+    {
+      "id": "fixture:diagnosis:4c24c72e-8fe3-5676-a65d-f594abd087b9",
+      "anomaly_id": "fixture:anomaly:c7205c37-63a6-5f3e-b31d-679cb5c985c1",
+      "related_conjunction_ids": [],
+      "status": "not_assessed",
+      "possible_cause": null,
+      "evidence": [
+        {
+          "kind": "input_reference",
+          "reference_type": "anomaly",
+          "reference_id": "fixture:anomaly:c7205c37-63a6-5f3e-b31d-679cb5c985c1",
+          "description": "Received placeholder anomaly; not a detected event."
+        },
+        {
+          "kind": "input_reference",
+          "reference_type": "conjunction",
+          "reference_id": "fixture:conjunction:905ce969-5ee3-5048-b4d4-226757d1c4d8",
+          "description": "Received placeholder conjunction; no relationship assessed."
+        }
+      ],
+      "explanation": "Inputs connected by reference only. No correlation or rule ran."
+    }
+  ]
+}

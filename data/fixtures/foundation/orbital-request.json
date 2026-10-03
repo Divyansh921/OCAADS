@@ -1,0 +1,24 @@
+{
+  "request_id": "fixture:orbital-request",
+  "provenance": {
+    "kind": "fixture",
+    "source": "foundation-v1: hand-authored identifiers; not orbital data"
+  },
+  "target": {
+    "object_id": "fixture:target",
+    "display_name": "Foundation placeholder — not a tracked satellite",
+    "epoch": null,
+    "elements": null
+  },
+  "comparisons": [
+    {
+      "object_id": "fixture:comparison",
+      "epoch": null,
+      "elements": null
+    }
+  ],
+  "window": {
+    "start": "2030-01-01T00:00:00Z",
+    "end": "2030-01-02T00:00:00Z"
+  }
+}

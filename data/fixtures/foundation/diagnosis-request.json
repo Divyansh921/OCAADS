@@ -1,0 +1,45 @@
+{
+  "request_id": "fixture:diagnosis-request",
+  "satellite_id": "fixture:target",
+  "orbital_result": {
+    "request_id": "fixture:orbital-request",
+    "satellite_id": "fixture:target",
+    "status": "not_computed",
+    "provenance": {
+      "kind": "fixture",
+      "source": "foundation:orbital-reference-only"
+    },
+    "notice": "Fixture only: identifiers connected; no screening or orbital calculation ran.",
+    "conjunctions": [
+      {
+        "id": "fixture:conjunction:905ce969-5ee3-5048-b4d4-226757d1c4d8",
+        "target_id": "fixture:target",
+        "comparison_id": "fixture:comparison",
+        "tca": null,
+        "miss_distance_km": null
+      }
+    ]
+  },
+  "telemetry_result": {
+    "request_id": "fixture:telemetry-request",
+    "satellite_id": "fixture:target",
+    "status": "not_computed",
+    "provenance": {
+      "kind": "fixture",
+      "source": "foundation:telemetry-reference-only"
+    },
+    "notice": "Fixture only: first sample referenced; no anomaly detection or scoring ran.",
+    "anomalies": [
+      {
+        "id": "fixture:anomaly:c7205c37-63a6-5f3e-b31d-679cb5c985c1",
+        "satellite_id": "fixture:target",
+        "timestamp": "2030-01-01T12:00:00Z",
+        "score": null,
+        "signals": [
+          "fixture_signal"
+        ],
+        "status": "not_evaluated"
+      }
+    ]
+  }
+}
