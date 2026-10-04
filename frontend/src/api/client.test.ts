@@ -20,6 +20,7 @@ import {
   ApiResponseError,
   assessDiagnosis,
   getHealth,
+  getOrbitalDataset,
   screenOrbital,
 } from "./client";
 
@@ -49,6 +50,7 @@ const telemetryRequest = {
 const orbitalResult = {
   ...orbitalResultFixture,
   status: fixtureLiteral(orbitalResultFixture.status, "not_computed"),
+  screening_status: fixtureLiteral(orbitalResultFixture.screening_status, "not_computed"),
   provenance: {
     ...orbitalResultFixture.provenance,
     kind: fixtureLiteral(orbitalResultFixture.provenance.kind, "fixture"),
@@ -78,7 +80,7 @@ const health = {
   status: "ok",
   service: "OCAADS",
   stage: "foundation",
-  engine_mode: "fixture_only",
+  engine_mode: "orbital_calculated_telemetry_fixture",
 } satisfies HealthResponse;
 
 const fetchMock = vi.fn<typeof fetch>();
@@ -99,6 +101,17 @@ describe("foundation API client", () => {
 
     await expect(getHealth(controller.signal)).resolves.toEqual(health);
     expect(fetchMock).toHaveBeenCalledExactlyOnceWith("/api/health", {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+  });
+
+  it("loads the local orbital dataset using GET and forwards cancellation", async () => {
+    const controller = new AbortController();
+    fetchMock.mockResolvedValueOnce(Response.json(orbitalRequest));
+    await expect(getOrbitalDataset(controller.signal)).resolves.toEqual(orbitalRequest);
+    expect(fetchMock).toHaveBeenCalledExactlyOnceWith("/api/orbital/dataset", {
       method: "GET",
       headers: { Accept: "application/json" },
       signal: controller.signal,
@@ -217,6 +230,7 @@ describe("foundation API client", () => {
     { ...health, stage: "scaffold" },
     { status: "ok", service: "OCAADS", stage: "foundation" },
     { ...health, engine_mode: "real" },
+    { ...health, engine_mode: "fixture_only" },
     { ...health, service: "Other service" },
     { ...health, status: "unavailable" },
   ])("rejects unexpected health JSON instead of claiming connectivity: %j", async (body) => {

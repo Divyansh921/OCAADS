@@ -1,5 +1,5 @@
-"""Person 1's orbital boundary: interface.py plus a references-only fixture.
+"""Person 1's offline TLE ingestion, SGP4 propagation, and sampled screening.
 
-No parsing, propagation, TCA, miss-distance calculation, or screening is
-implemented. Shared inputs/outputs live in app.domain.contracts.
+The references-only fixture remains separate. Shared inputs/outputs live in
+app.domain.contracts; calculation settings are in docs/scientific-decisions.md.
 """

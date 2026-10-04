@@ -1,5 +1,6 @@
 fastapi<1.0,>=0.115
 pydantic<3.0,>=2.10
+sgp4<3.0,>=2.24
 uvicorn<1.0,>=0.34
 
 [dev]
@@ -10,4 +11,3 @@ ruff<1.0,>=0.11
 [engines]
 numpy<3.0,>=2.2
 scikit-learn<2.0,>=1.6
-sgp4<3.0,>=2.24

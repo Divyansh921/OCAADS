@@ -13,7 +13,11 @@ FIXTURES = Path(__file__).resolve().parents[2] / "data" / "fixtures" / "foundati
 @pytest.fixture
 def fixture_json():
     def load(name: str) -> dict:
-        return json.loads((FIXTURES / f"{name}.json").read_text(encoding="utf-8"))
+        if name == "orbital-validation-request":
+            path = FIXTURES.parent / "orbital-validation" / "request.json"
+        else:
+            path = FIXTURES / f"{name}.json"
+        return json.loads(path.read_text(encoding="utf-8"))
     return load
 
 

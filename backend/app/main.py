@@ -11,11 +11,11 @@ from app.core.http import register_error_handlers
 from app.domain.contracts import HealthResponse
 
 app = FastAPI(
-    title="OCAADS Foundation API",
+    title="OCAADS Prototype API",
     version="0.1.0",
     description=(
-        "Team development foundation. All engine adapters are references-only fixtures. "
-        "No orbital calculations, ML, correlation, or diagnosis are implemented."
+        "Cached six-object TLE/SGP4 orbital screening and references-only fixtures. "
+        "Screening rank is not collision probability. Telemetry and diagnosis are uncomputed."
     ),
     separate_input_output_schemas=False,
 )

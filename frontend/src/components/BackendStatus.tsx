@@ -32,7 +32,7 @@ export default function BackendStatus() {
       <h2 id="backend-heading">Backend connection</h2>
       <p role="status">
         {status === "checking" && "Checking the local OCAADS API…"}
-        {status === "connected" && "Connected. The API reports foundation / fixture_only. Scientific engines are not implemented; this confirms liveness only."}
+        {status === "connected" && "Connected. Orbital SGP4 screening is configured; telemetry and diagnosis are fixtures. This confirms API liveness only."}
         {status === "unavailable" && "The API is unavailable or returned an unexpected response. Start the FastAPI backend on port 8000, then try again."}
       </p>
       <button

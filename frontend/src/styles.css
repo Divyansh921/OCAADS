@@ -27,3 +27,18 @@ button { font: inherit; color: #092039; background: #85c9f3; border: 0; border-r
 button:disabled { opacity: 0.65; cursor: wait; }
 button:focus-visible, a:focus-visible { outline: 3px solid #f3d691; outline-offset: 3px; }
 footer { margin-top: 2rem; border-top: 1px solid #324a64; padding-top: 1rem; font-size: 0.9rem; }
+.orbital-panel { grid-column: 1 / -1; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.error { color: #ffbdba; }
+.orbital-inputs, .orbital-results { border-top: 1px solid #324a64; margin-top: 1rem; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; text-align: left; }
+caption { text-align: left; color: #bbcbdc; margin-bottom: 0.5rem; }
+th, td { padding: 0.75rem; border-bottom: 1px solid #324a64; vertical-align: top; }
+.metadata { display: grid; grid-template-columns: minmax(100px, 140px) minmax(0, 1fr); gap: 0.5rem 1rem; }
+.metadata dt { font-weight: 600; }
+.metadata dd { margin: 0; overflow-wrap: anywhere; color: #bbcbdc; }
+@media (max-width: 480px) {
+  .metadata { grid-template-columns: 1fr; gap: 0.25rem; }
+  .metadata dd { margin-bottom: 0.5rem; }
+}

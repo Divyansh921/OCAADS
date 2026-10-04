@@ -22,6 +22,8 @@ Identifier = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
 Text = Annotated[str, Field(min_length=1, max_length=1000)]
 Number = Annotated[float, Field(strict=True, allow_inf_nan=False)]
 DistanceKm = Annotated[float, Field(strict=True, ge=0, allow_inf_nan=False)]
+PositiveSeconds = Annotated[float, Field(gt=0, allow_inf_nan=False)]
+Sha256 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 
 
 def require_timestamp(value: object) -> object:
@@ -64,6 +66,25 @@ class TimeWindow(ContractModel):
         if self.end <= self.start:
             raise ValueError("window.end must be later than window.start")
         return self
+
+
+class OrbitalCalculationMetadata(ContractModel):
+    """Reproduction settings for a completed orbital screening result."""
+
+    source_endpoint: Text
+    snapshot_retrieved_at: UtcTimestamp | None
+    snapshot_recorded_at: UtcTimestamp
+    snapshot_sha256: Sha256
+    propagator: Literal["sgp4"]
+    propagator_version: Text
+    gravity_model: Literal["WGS72"]
+    frame: Literal["TEME"]
+    position_unit: Literal["km"]
+    velocity_unit: Literal["km/s"]
+    window: TimeWindow
+    sample_interval_seconds: PositiveSeconds
+    tca_refinement_seconds: PositiveSeconds
+    screening_threshold_km: DistanceKm
 
 
 class TleElements(ContractModel):
@@ -113,6 +134,7 @@ class Conjunction(ContractModel):
     comparison_id: Identifier
     tca: UtcTimestamp | None
     miss_distance_km: DistanceKm | None
+    screening_rank: Annotated[int, Field(strict=True, ge=1)] | None
 
     @model_validator(mode="after")
     def different_objects(self) -> Self:
@@ -136,6 +158,8 @@ class ResultBase(ContractModel):
 
 
 class OrbitalResult(ResultBase):
+    screening_status: Literal["not_computed", "no_conjunction", "candidates_found"]
+    metadata: OrbitalCalculationMetadata | None
     conjunctions: list[Conjunction]
 
     @model_validator(mode="after")
@@ -143,14 +167,34 @@ class OrbitalResult(ResultBase):
         ids = [item.id for item in self.conjunctions]
         if len(ids) != len(set(ids)):
             raise ValueError("conjunction identifiers must be unique within a result")
+        if self.status == "not_computed":
+            if self.screening_status != "not_computed" or self.metadata is not None:
+                raise ValueError("uncomputed orbital results cannot claim screening metadata")
+        elif self.screening_status == "not_computed":
+            raise ValueError("completed orbital results require an explicit screening status")
+        elif self.screening_status == "no_conjunction" and self.conjunctions:
+            raise ValueError("no_conjunction results must have an empty conjunction list")
+        elif self.screening_status == "candidates_found" and not self.conjunctions:
+            raise ValueError("candidates_found results require at least one conjunction")
+        elif self.metadata is None:
+            raise ValueError("completed orbital results require calculation metadata")
         for item in self.conjunctions:
             if item.target_id != self.satellite_id:
                 raise ValueError("conjunction target must match result satellite_id")
             if self.status == "not_computed":
-                if item.tca is not None or item.miss_distance_km is not None:
+                if (item.tca is not None or item.miss_distance_km is not None
+                        or item.screening_rank is not None):
                     raise ValueError("references-only orbital fixtures must leave results null")
-            elif item.tca is None or item.miss_distance_km is None:
+            elif item.tca is None or item.miss_distance_km is None or item.screening_rank is None:
                 raise ValueError("completed conjunctions require tca and miss_distance_km")
+            elif self.metadata is not None:
+                if not self.metadata.window.start <= item.tca <= self.metadata.window.end:
+                    raise ValueError("conjunction tca must fall inside the calculation window")
+                if item.miss_distance_km >= self.metadata.screening_threshold_km:
+                    raise ValueError("conjunction distance must be below the screening threshold")
+        ranks = [item.screening_rank for item in self.conjunctions]
+        if self.status == "completed" and ranks != list(range(1, len(ranks) + 1)):
+            raise ValueError("completed conjunctions require consecutive screening ranks")
         if self.status == "completed" and self.provenance.kind != "calculated":
             raise ValueError("completed orbital results must be calculated")
         return self
@@ -275,7 +319,9 @@ class HealthResponse(ContractModel):
     status: Literal["ok"] = "ok"
     service: Literal["OCAADS"] = "OCAADS"
     stage: Literal["foundation"] = "foundation"
-    engine_mode: Literal["fixture_only"] = "fixture_only"
+    engine_mode: Literal["orbital_calculated_telemetry_fixture"] = (
+        "orbital_calculated_telemetry_fixture"
+    )
 
 
 class ValidationIssue(ContractModel):

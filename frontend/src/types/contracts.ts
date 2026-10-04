@@ -6,6 +6,7 @@ export type ErrorResponse = components["schemas"]["ErrorResponse"];
 export type ValidationIssue = components["schemas"]["ValidationIssue"];
 export type OrbitalRequest = components["schemas"]["OrbitalRequest"];
 export type OrbitalResult = components["schemas"]["OrbitalResult"];
+export type OrbitalCalculationMetadata = components["schemas"]["OrbitalCalculationMetadata"];
 export type TelemetryRequest = components["schemas"]["TelemetryRequest"];
 export type TelemetryResult = components["schemas"]["TelemetryResult"];
 export type DiagnosisRequest = components["schemas"]["DiagnosisRequest"];

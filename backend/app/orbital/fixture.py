@@ -20,6 +20,7 @@ class FixtureOrbitalEngine:
                     comparison_id=request.comparisons[0].object_id,
                     tca=None,
                     miss_distance_km=None,
+                    screening_rank=None,
                 )
             )
         return OrbitalResult(
@@ -28,5 +29,7 @@ class FixtureOrbitalEngine:
             status="not_computed",
             provenance=ResultProvenance(kind="fixture", source="foundation:orbital-reference-only"),
             notice="Fixture only: identifiers connected; no screening or orbital calculation ran.",
+            screening_status="not_computed",
+            metadata=None,
             conjunctions=references,
         )

@@ -36,7 +36,7 @@ def test_empty_anomalies_produce_no_assessment(diagnosis_request):
 def test_non_fixture_results_cannot_be_silently_diagnosed(diagnosis_request):
     payload = diagnosis_request.model_dump(mode="json")
     # An empty, schema-valid completed envelope tests rejection, not scientific correctness.
-    payload["orbital_result"].update(status="completed", conjunctions=[])
-    payload["orbital_result"]["provenance"]["kind"] = "calculated"
+    payload["telemetry_result"].update(status="completed", anomalies=[])
+    payload["telemetry_result"]["provenance"]["kind"] = "model_generated"
     with pytest.raises(EngineNotImplementedError, match="not implemented"):
         FixtureDiagnosisEngine().diagnose(DiagnosisRequest.model_validate(payload))

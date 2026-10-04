@@ -1,0 +1,20 @@
+{
+  "source": "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=TLE",
+  "format": "TLE",
+  "snapshot_sha256": "98c1aa8c9fe53a6b93e3b6780010ae696ee0a8bb4d0cf20e9e49afb88a1d422e",
+  "target": "norad:25544",
+  "comparisons": [
+    "norad:49271",
+    "norad:66052",
+    "norad:66906",
+    "norad:67683",
+    "norad:67685"
+  ],
+  "selection": "First orbital validation slice: one target and five explicitly selected records.",
+  "license_note": "Review CelesTrak usage and redistribution terms before publishing this raw snapshot.",
+  "status": "engineering_fixture_not_operational_data",
+  "snapshot_saved_at": "2026-10-03T19:37:20Z",
+  "retrieved_at": null,
+  "capture_method": "selected records transcribed from tool-fetched public source response",
+  "checksum_scope": "exact saved six-record excerpt, not the complete HTTP response"
+}

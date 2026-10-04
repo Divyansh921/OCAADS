@@ -1,4 +1,4 @@
-"""Liveness only; the response explicitly identifies fixture-only engine mode."""
+"""Liveness only; the response identifies which adapters are active."""
 
 from fastapi import APIRouter
 

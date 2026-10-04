@@ -135,5 +135,23 @@ def test_completed_orbital_record_requires_distance_and_tca(fixture_json):
     payload = fixture_json("orbital-result")
     payload["status"] = "completed"
     payload["provenance"]["kind"] = "calculated"
+    payload["screening_status"] = "candidates_found"
+    payload["metadata"] = {
+        "source_endpoint": "https://example.test/snapshot",
+        "snapshot_retrieved_at": "2030-01-01T00:00:00Z",
+        "snapshot_recorded_at": "2030-01-01T00:00:00Z",
+        "snapshot_sha256": "0" * 64,
+        "propagator": "sgp4",
+        "propagator_version": "2.27",
+        "gravity_model": "WGS72",
+        "frame": "TEME",
+        "position_unit": "km",
+        "velocity_unit": "km/s",
+        "window": {"start": "2030-01-01T00:00:00Z", "end": "2030-01-08T00:00:00Z"},
+        "sample_interval_seconds": 10.0,
+        "tca_refinement_seconds": 1.0,
+        "screening_threshold_km": 10.0,
+    }
+    payload["conjunctions"][0]["screening_rank"] = 1
     with pytest.raises(ValidationError, match="require tca and miss_distance"):
         OrbitalResult.model_validate(payload)

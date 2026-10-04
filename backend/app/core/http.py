@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.domain.contracts import ErrorResponse, ValidationIssue
-from app.domain.errors import EngineNotImplementedError
+from app.domain.errors import EngineNotImplementedError, OrbitalInputError
 
 ERROR_RESPONSES = {
     422: {"model": ErrorResponse, "description": "Invalid request or inconsistent references."},
@@ -25,6 +25,11 @@ def register_error_handlers(app: FastAPI) -> None:
                 for error in exc.errors()
             ],
         )
+        return JSONResponse(status_code=422, content=payload.model_dump(mode="json"))
+
+    @app.exception_handler(OrbitalInputError)
+    async def orbital_input_error(request: Request, exc: OrbitalInputError) -> JSONResponse:
+        payload = ErrorResponse(code="invalid_request", message=str(exc), issues=[])
         return JSONResponse(status_code=422, content=payload.model_dump(mode="json"))
 
     @app.exception_handler(EngineNotImplementedError)

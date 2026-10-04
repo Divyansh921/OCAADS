@@ -39,6 +39,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/orbital/dataset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Load verified local six-object TLE input */
+        get: operations["getOrbitalDataset"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/orbital/screen": {
         parameters: {
             query?: never;
@@ -48,7 +65,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Connect an orbital fixture (no calculation) */
+        /** Screen TLE inputs with SGP4; not collision probability */
         post: operations["screenOrbital"];
         delete?: never;
         options?: never;
@@ -106,6 +123,8 @@ export interface components {
             id: string;
             /** Miss Distance Km */
             miss_distance_km: number | null;
+            /** Screening Rank */
+            screening_rank: number | null;
             /** Target Id */
             target_id: string;
             /** Tca */
@@ -190,10 +209,10 @@ export interface components {
         HealthResponse: {
             /**
              * Engine Mode
-             * @default fixture_only
+             * @default orbital_calculated_telemetry_fixture
              * @constant
              */
-            engine_mode: "fixture_only";
+            engine_mode: "orbital_calculated_telemetry_fixture";
             /**
              * Service
              * @default OCAADS
@@ -238,6 +257,57 @@ export interface components {
              */
             format: "omm";
         };
+        /**
+         * OrbitalCalculationMetadata
+         * @description Reproduction settings for a completed orbital screening result.
+         */
+        OrbitalCalculationMetadata: {
+            /**
+             * Frame
+             * @constant
+             */
+            frame: "TEME";
+            /**
+             * Gravity Model
+             * @constant
+             */
+            gravity_model: "WGS72";
+            /**
+             * Position Unit
+             * @constant
+             */
+            position_unit: "km";
+            /**
+             * Propagator
+             * @constant
+             */
+            propagator: "sgp4";
+            /** Propagator Version */
+            propagator_version: string;
+            /** Sample Interval Seconds */
+            sample_interval_seconds: number;
+            /** Screening Threshold Km */
+            screening_threshold_km: number;
+            /**
+             * Snapshot Recorded At
+             * Format: date-time
+             */
+            snapshot_recorded_at: string;
+            /** Snapshot Retrieved At */
+            snapshot_retrieved_at: string | null;
+            /** Snapshot Sha256 */
+            snapshot_sha256: string;
+            /** Source Endpoint */
+            source_endpoint: string;
+            /** Tca Refinement Seconds */
+            tca_refinement_seconds: number;
+            /**
+             * Velocity Unit
+             * @constant
+             */
+            velocity_unit: "km/s";
+            window: components["schemas"]["TimeWindow"];
+        };
         /** OrbitalObject */
         OrbitalObject: {
             /** Display Name */
@@ -263,6 +333,7 @@ export interface components {
         OrbitalResult: {
             /** Conjunctions */
             conjunctions: components["schemas"]["Conjunction"][];
+            metadata: components["schemas"]["OrbitalCalculationMetadata"] | null;
             /** Notice */
             notice: string;
             provenance: components["schemas"]["ResultProvenance"];
@@ -270,6 +341,11 @@ export interface components {
             request_id: string;
             /** Satellite Id */
             satellite_id: string;
+            /**
+             * Screening Status
+             * @enum {string}
+             */
+            screening_status: "not_computed" | "no_conjunction" | "candidates_found";
             /**
              * Status
              * @enum {string}
@@ -436,6 +512,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    getOrbitalDataset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrbitalRequest"];
+                };
+            };
+            /** @description Invalid request or inconsistent references. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Real engines are not implemented. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

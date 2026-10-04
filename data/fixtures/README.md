@@ -4,4 +4,4 @@
 
 These examples deliberately contain no real satellite elements, measured telemetry, calculated TCA/distance, anomaly scores, or assessed causes. Do not rebrand them as a working scientific demo.
 
-Future validated orbital/telemetry/offline-demo fixtures are separate work. Record sources, licenses, timestamps, units, frames, checksums, expected behavior, and limitations; label synthetic data clearly. Start a scientific orbital fixture only after agreeing on the target and data contract.
+`orbital-validation/` holds the frozen local six-object orbital engineering input. Its [README](orbital-validation/README.md) explains provenance and sampling limitations. It is independent of the reference fixtures and of any future synthetic integration demonstration. No matched orbital/telemetry incident is claimed.

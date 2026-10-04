@@ -5,6 +5,7 @@ Summary: OCAADS prototype API and satellite investigation engines
 Requires-Python: >=3.11
 Requires-Dist: fastapi<1.0,>=0.115
 Requires-Dist: pydantic<3.0,>=2.10
+Requires-Dist: sgp4<3.0,>=2.24
 Requires-Dist: uvicorn<1.0,>=0.34
 Provides-Extra: dev
 Requires-Dist: httpx<1.0,>=0.28; extra == "dev"
@@ -13,4 +14,3 @@ Requires-Dist: ruff<1.0,>=0.11; extra == "dev"
 Provides-Extra: engines
 Requires-Dist: numpy<3.0,>=2.2; extra == "engines"
 Requires-Dist: scikit-learn<2.0,>=1.6; extra == "engines"
-Requires-Dist: sgp4<3.0,>=2.24; extra == "engines"

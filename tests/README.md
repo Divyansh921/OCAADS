@@ -5,4 +5,4 @@
 
 From `coding/backend/`, `.venv/bin/python -m pytest` discovers the backend suite and this integration test through `pyproject.toml`. Owner-specific tests stay in `backend/tests/{orbital,telemetry,diagnosis}/`; HTTP-specific tests stay in `backend/tests/api/`.
 
-For a real local HTTP/proxy check, run `coding/scripts/check_fixture_flow.py` as described in [`../../docs/development.md`](../../docs/development.md). Frontend API-client tests live alongside that client. Neither mocks nor a successful bundle proves scientific accuracy or browser interaction behavior.
+For live HTTP/proxy checks, run `coding/scripts/check_fixture_flow.py` for explicit reference-only wiring and `coding/scripts/check_orbital_flow.py` for the calculated six-object slice. See [`../../docs/development.md`](../../docs/development.md). Frontend API-client tests live alongside that client; mocks/builds do not prove browser interaction or operational accuracy.

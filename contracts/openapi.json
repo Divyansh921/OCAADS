@@ -85,6 +85,18 @@
             ],
             "title": "Miss Distance Km"
           },
+          "screening_rank": {
+            "anyOf": [
+              {
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Screening Rank"
+          },
           "target_id": {
             "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
             "title": "Target Id",
@@ -108,7 +120,8 @@
           "target_id",
           "comparison_id",
           "tca",
-          "miss_distance_km"
+          "miss_distance_km",
+          "screening_rank"
         ],
         "title": "Conjunction",
         "type": "object"
@@ -335,8 +348,8 @@
         "additionalProperties": false,
         "properties": {
           "engine_mode": {
-            "const": "fixture_only",
-            "default": "fixture_only",
+            "const": "orbital_calculated_telemetry_fixture",
+            "default": "orbital_calculated_telemetry_fixture",
             "title": "Engine Mode",
             "type": "string"
           },
@@ -417,6 +430,107 @@
           "fields"
         ],
         "title": "OmmElements",
+        "type": "object"
+      },
+      "OrbitalCalculationMetadata": {
+        "additionalProperties": false,
+        "description": "Reproduction settings for a completed orbital screening result.",
+        "properties": {
+          "frame": {
+            "const": "TEME",
+            "title": "Frame",
+            "type": "string"
+          },
+          "gravity_model": {
+            "const": "WGS72",
+            "title": "Gravity Model",
+            "type": "string"
+          },
+          "position_unit": {
+            "const": "km",
+            "title": "Position Unit",
+            "type": "string"
+          },
+          "propagator": {
+            "const": "sgp4",
+            "title": "Propagator",
+            "type": "string"
+          },
+          "propagator_version": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Propagator Version",
+            "type": "string"
+          },
+          "sample_interval_seconds": {
+            "exclusiveMinimum": 0.0,
+            "title": "Sample Interval Seconds",
+            "type": "number"
+          },
+          "screening_threshold_km": {
+            "minimum": 0.0,
+            "title": "Screening Threshold Km",
+            "type": "number"
+          },
+          "snapshot_recorded_at": {
+            "format": "date-time",
+            "title": "Snapshot Recorded At",
+            "type": "string"
+          },
+          "snapshot_retrieved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snapshot Retrieved At"
+          },
+          "snapshot_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Snapshot Sha256",
+            "type": "string"
+          },
+          "source_endpoint": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Source Endpoint",
+            "type": "string"
+          },
+          "tca_refinement_seconds": {
+            "exclusiveMinimum": 0.0,
+            "title": "Tca Refinement Seconds",
+            "type": "number"
+          },
+          "velocity_unit": {
+            "const": "km/s",
+            "title": "Velocity Unit",
+            "type": "string"
+          },
+          "window": {
+            "$ref": "#/components/schemas/TimeWindow"
+          }
+        },
+        "required": [
+          "source_endpoint",
+          "snapshot_retrieved_at",
+          "snapshot_recorded_at",
+          "snapshot_sha256",
+          "propagator",
+          "propagator_version",
+          "gravity_model",
+          "frame",
+          "position_unit",
+          "velocity_unit",
+          "window",
+          "sample_interval_seconds",
+          "tca_refinement_seconds",
+          "screening_threshold_km"
+        ],
+        "title": "OrbitalCalculationMetadata",
         "type": "object"
       },
       "OrbitalObject": {
@@ -531,6 +645,16 @@
             "title": "Conjunctions",
             "type": "array"
           },
+          "metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OrbitalCalculationMetadata"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "notice": {
             "maxLength": 1000,
             "minLength": 1,
@@ -550,6 +674,15 @@
             "title": "Satellite Id",
             "type": "string"
           },
+          "screening_status": {
+            "enum": [
+              "not_computed",
+              "no_conjunction",
+              "candidates_found"
+            ],
+            "title": "Screening Status",
+            "type": "string"
+          },
           "status": {
             "enum": [
               "not_computed",
@@ -565,6 +698,8 @@
           "status",
           "provenance",
           "notice",
+          "screening_status",
+          "metadata",
           "conjunctions"
         ],
         "title": "OrbitalResult",
@@ -826,8 +961,8 @@
     }
   },
   "info": {
-    "description": "Team development foundation. All engine adapters are references-only fixtures. No orbital calculations, ML, correlation, or diagnosis are implemented.",
-    "title": "OCAADS Foundation API",
+    "description": "Cached six-object TLE/SGP4 orbital screening and references-only fixtures. Screening rank is not collision probability. Telemetry and diagnosis are uncomputed.",
+    "title": "OCAADS Prototype API",
     "version": "0.1.0"
   },
   "openapi": "3.1.0",
@@ -904,6 +1039,47 @@
         ]
       }
     },
+    "/api/orbital/dataset": {
+      "get": {
+        "operationId": "getOrbitalDataset",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrbitalRequest"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request or inconsistent references."
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Real engines are not implemented."
+          }
+        },
+        "summary": "Load verified local six-object TLE input",
+        "tags": [
+          "orbital"
+        ]
+      }
+    },
     "/api/orbital/screen": {
       "post": {
         "operationId": "screenOrbital",
@@ -949,7 +1125,7 @@
             "description": "Real engines are not implemented."
           }
         },
-        "summary": "Connect an orbital fixture (no calculation)",
+        "summary": "Screen TLE inputs with SGP4; not collision probability",
         "tags": [
           "orbital"
         ]

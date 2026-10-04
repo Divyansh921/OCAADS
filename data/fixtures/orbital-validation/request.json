@@ -1,0 +1,73 @@
+{
+  "request_id": "fixture:orbital-validation-2026-10-03",
+  "provenance": {
+    "kind": "supplied",
+    "source": "CelesTrak stations TLE captured excerpt; retrieval time not recorded; SHA256 98c1aa8c9fe53a6b93e3b6780010ae696ee0a8bb4d0cf20e9e49afb88a1d422e"
+  },
+  "target": {
+    "object_id": "norad:25544",
+    "epoch": "2026-10-03T11:57:00.363168Z",
+    "elements": {
+      "format": "tle",
+      "line1": "1 25544U 98067A   26276.49792087  .00005083  00000+0  10128-3 0  9999",
+      "line2": "2 25544  51.6313 124.0722 0006914 218.1010 141.9490 15.48725660588544"
+    },
+    "display_name": "ISS (ZARYA)"
+  },
+  "comparisons": [
+    {
+      "object_id": "norad:49271",
+      "epoch": "2026-10-02T12:34:24.457152Z",
+      "elements": {
+        "format": "tle",
+        "line1": "1 49271U 11037PF  26275.52389418  .00011917  00000+0  16518-1 0  9997",
+        "line2": "2 49271  51.6444  38.3947 0944057 162.5957 200.9722 12.44918348238400"
+      },
+      "display_name": "FREGAT DEB"
+    },
+    {
+      "object_id": "norad:66052",
+      "epoch": "2026-10-01T16:38:36.606335Z",
+      "elements": {
+        "format": "tle",
+        "line1": "1 66052U 98067XS  26274.69347924  .00409902  88175-4  58866-3 0  9997",
+        "line2": "2 66052  51.6101  83.0758 0006989 275.9548  84.0667 16.04802827 54893"
+      },
+      "display_name": "HRC MONOBLOCK CAMERA"
+    },
+    {
+      "object_id": "norad:66906",
+      "epoch": "2026-10-03T05:35:14.320895Z",
+      "elements": {
+        "format": "tle",
+        "line1": "1 66906U 98067XT  26276.23280464  .00042000  00000+0  32601-3 0  9999",
+        "line2": "2 66906  51.6234 100.4700 0004328 229.2260 130.8363 15.71355112 47592"
+      },
+      "display_name": "DUPLEX"
+    },
+    {
+      "object_id": "norad:67683",
+      "epoch": "2026-10-03T01:33:26.007840Z",
+      "elements": {
+        "format": "tle",
+        "line1": "1 67683U 98067YA  26276.06488435  .00062235  00000+0  48478-3 0  9992",
+        "line2": "2 67683  51.6229 107.6320 0008530 242.9374 117.0754 15.71067525 37175"
+      },
+      "display_name": "KNACKSAT-2"
+    },
+    {
+      "object_id": "norad:67685",
+      "epoch": "2026-10-03T06:01:28.425215Z",
+      "elements": {
+        "format": "tle",
+        "line1": "1 67685U 98067YC  26276.25102344  .00088858  00000+0  55912-3 0  9997",
+        "line2": "2 67685  51.6197 103.5777 0009553 245.4190 114.5815 15.75892643 37241"
+      },
+      "display_name": "GXIBA-1"
+    }
+  ],
+  "window": {
+    "start": "2026-10-03T00:00:00Z",
+    "end": "2026-10-10T00:00:00Z"
+  }
+}

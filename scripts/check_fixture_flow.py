@@ -41,7 +41,7 @@ def main() -> None:
         "orbital_result": orbital.model_dump(mode="json"),
         "telemetry_result": telemetry.model_dump(mode="json"),
     }))
-    assert health.engine_mode == "fixture_only"
+    assert health.engine_mode == "orbital_calculated_telemetry_fixture"
     assert orbital.status == telemetry.status == diagnosis.status == "not_computed"
     assert len(orbital.conjunctions) == len(telemetry.anomalies) == len(diagnosis.diagnoses) == 1
     references = {item.reference_id for item in diagnosis.diagnoses[0].evidence}

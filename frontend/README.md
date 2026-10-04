@@ -1,10 +1,10 @@
-# Frontend foundation
+# Frontend orbital validation UI
 
-React 18 + TypeScript + Vite. This is a **fixture-only development foundation**, not a finished dashboard or an operational spacecraft tool.
+React 18 + TypeScript + Vite. The frontend exposes the first cached TLE/SGP4 validation slice. Telemetry and diagnosis remain unfinished placeholders.
 
-The page provides anchor navigation to conjunctions, telemetry/anomalies, and diagnosis. Each section explicitly says **Not implemented** and makes no request. The only automatic request is `GET /api/health`, with loading, connected, unavailable, five-second timeout, and retry states. React's development Strict Mode may start and cancel an extra health request; no engine endpoint is called automatically.
+The page provides navigation to conjunctions, telemetry/anomalies, and diagnosis. Health is the only automatic request, with a five-second timeout and retry. **Load local snapshot** requests `GET /api/orbital/dataset`; **Run orbital screening** posts that verified input to `/api/orbital/screen`. It displays selected IDs/epochs, the replay window, calculated candidates or an explicit no-candidate state, errors/retry, and the provenance/method record. Pending requests are aborted on unmount; no engine runs automatically.
 
-Satellite selection and the precomputed what-if folders remain reserved. There are no charts, scientific calculations, displayed fixture results, or maneuver recommendations.
+Calculations stay in the backend. The UI is a historical engineering replay, not a live prediction. Satellite selection and the precomputed what-if remain reserved.
 
 ## Run locally
 
@@ -45,13 +45,14 @@ npm run check:api     # regenerate in memory and compare; writes nothing
 | Function | Route | Contract |
 | --- | --- | --- |
 | `getHealth(signal?)` | `GET /api/health` | `HealthResponse` |
+| `getOrbitalDataset(signal?)` | `GET /api/orbital/dataset` | `OrbitalRequest` |
 | `screenOrbital(request, signal?)` | `POST /api/orbital/screen` | `OrbitalRequest` → `OrbitalResult` |
 | `analyzeTelemetry(request, signal?)` | `POST /api/telemetry/analyze` | `TelemetryRequest` → `TelemetryResult` |
 | `assessDiagnosis(request, signal?)` | `POST /api/diagnosis/assess` | `DiagnosisRequest` → `DiagnosisResult` |
 
-All signals are optional `AbortSignal` values. POST methods send JSON. These methods are available for future integration; the placeholder sections do not call them.
+All signals are optional `AbortSignal` values. POST methods send JSON. The conjunction section calls the dataset/screening methods on demand; telemetry/diagnosis sections do not invoke their adapters.
 
-- Health requires `status: "ok"`, `service: "OCAADS"`, `stage: "foundation"`, and `engine_mode: "fixture_only"`. This confirms liveness, not scientific readiness.
+- Health requires `status: "ok"`, `service: "OCAADS"`, `stage: "foundation"`, and `engine_mode: "orbital_calculated_telemetry_fixture"`. This confirms liveness/configuration, not dataset readiness.
 - Non-2xx responses throw `ApiError` with `.status`. When the response matches the basic `ErrorResponse` shape, `.error` contains `{ code, message, issues }`; this preserves the documented 422 `invalid_request` and 501 `not_implemented` errors.
 - Non-JSON/malformed error bodies still produce `ApiError` with the HTTP status and no `.error` envelope. Raw HTML is not exposed as an application error message.
 - Invalid JSON on a successful response, or unexpected health JSON, throws `ApiResponseError`.
@@ -70,7 +71,7 @@ npm run typecheck
 npm run build
 ```
 
-`npm test` runs Vitest once in Node (no server, browser, or live API needed). `src/api/client.test.ts` covers the four routes, JSON POST bodies, signal forwarding, 422/501 envelopes, malformed errors, non-JSON responses, health mismatch, network failures, and cancellation. It reuses the existing [`foundation fixtures`](../data/fixtures/foundation/) as mocked wire payloads, with generated-type-checked request examples; it does not invent satellite data or verify scientific behavior. The fixtures are imported by tests only, not the app bundle.
+`npm test` runs Vitest once in Node. Client tests cover the five routes, JSON POST bodies, cancellation, structured failures, invalid JSON, and health contract mismatches. They reuse [`foundation fixtures`](../data/fixtures/foundation/) as mocked wire payloads; they do not validate physics or browser interaction. Fixtures are test imports, not bundled data.
 
 `build` also runs typechecking. There are no browser/component tests or frontend linter configured. Passing client tests and a build do **not** prove browser interaction, a live backend connection, or an end-to-end investigation workflow.
 
@@ -78,7 +79,8 @@ npm run build
 
 - `src/main.tsx`, `src/App.tsx`: entry point and minimal shell.
 - `src/components/BackendStatus.tsx`: health connection indicator and retry.
-- `src/features/{conjunctions,telemetry,diagnosis}/`: small placeholder sections.
+- `src/features/conjunctions/`: cached orbital loading/screening and result/metadata display.
+- `src/features/{telemetry,diagnosis}/`: placeholder sections.
 - `src/api/client.ts`, `src/api/client.test.ts`: typed HTTP boundary and focused tests.
 - `src/styles.css`: basic responsive styling and keyboard focus indicators.
 - `public/`: public static assets only; never secrets.

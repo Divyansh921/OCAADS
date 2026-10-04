@@ -1,7 +1,7 @@
-# Resolved development dependencies from the checked Python 3.12/Linux environment.
+# Resolved development/runtime dependencies from the checked Python 3.12/Linux environment.
 # Install with: python -m pip install -r requirements-dev.lock
 # Then: python -m pip install --no-deps -e .
-# Not a hash-locked or all-platform lock; scientific engine extras are excluded.
+# Not a hash-locked or all-platform lock; scientific ML extras are excluded.
 annotated-doc==0.0.5
 annotated-types==0.8.0
 anyio==4.15.1
@@ -21,6 +21,7 @@ pydantic_core==2.46.5
 Pygments==2.21.0
 pytest==8.4.2
 ruff==0.16.10
+sgp4==2.27
 starlette==1.7.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0

@@ -10,13 +10,16 @@
       "source": "foundation:orbital-reference-only"
     },
     "notice": "Fixture only: identifiers connected; no screening or orbital calculation ran.",
+    "screening_status": "not_computed",
+    "metadata": null,
     "conjunctions": [
       {
         "id": "fixture:conjunction:905ce969-5ee3-5048-b4d4-226757d1c4d8",
         "target_id": "fixture:target",
         "comparison_id": "fixture:comparison",
         "tca": null,
-        "miss_distance_km": null
+        "miss_distance_km": null,
+        "screening_rank": null
       }
     ]
   },

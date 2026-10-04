@@ -52,7 +52,7 @@ function isHealthResponse(value: unknown): value is HealthResponse {
     && value.status === "ok"
     && value.service === "OCAADS"
     && value.stage === "foundation"
-    && value.engine_mode === "fixture_only";
+    && value.engine_mode === "orbital_calculated_telemetry_fixture";
 }
 
 async function requestJson<T>(path: keyof paths, init: RequestInit): Promise<T> {
@@ -74,7 +74,7 @@ async function requestJson<T>(path: keyof paths, init: RequestInit): Promise<T> 
   }
 
   // Successful scientific payloads are trusted to the backend contract, not
-  // validated here. The foundation UI does not request or display these results.
+  // validated here. Their semantic invariants are enforced by the backend.
   return payload as T;
 }
 
@@ -102,6 +102,14 @@ function postJson<T>(path: keyof paths, payload: unknown, signal?: AbortSignal):
 
 export function screenOrbital(request: OrbitalRequest, signal?: AbortSignal): Promise<OrbitalResult> {
   return postJson<OrbitalResult>("/api/orbital/screen", request, signal);
+}
+
+export function getOrbitalDataset(signal?: AbortSignal): Promise<OrbitalRequest> {
+  return requestJson<OrbitalRequest>("/api/orbital/dataset", {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    signal,
+  });
 }
 
 export function analyzeTelemetry(request: TelemetryRequest, signal?: AbortSignal): Promise<TelemetryResult> {
